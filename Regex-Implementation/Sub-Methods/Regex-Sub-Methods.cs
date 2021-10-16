@@ -58,6 +58,10 @@ namespace Regex_Implementation.Sub_Methods
                     if ((i + skipindex) < text.Count)
                     {
 
+                        if (regex[i + skipindexregex] == '*')
+                        {
+                            skipindexregex = skipindexregex + 1;
+                        }
                         if ((text[i + skipindex] == regex[i + skipindexregex]) || (regex[i + skipindexregex] == '.'))
                         {
 
@@ -105,9 +109,10 @@ namespace Regex_Implementation.Sub_Methods
                             if (i + 1 < regex.Count)
                             {
 
-                                if (regex[i + 1] == '*')
+                                if (regex[i + 1 + skipindexregex] == '*')
                                 {
-                                    skipindexregex = skipindexregex + 2;
+                                    skipindex = skipindex - 1;
+                                    skipindexregex = skipindexregex + 1;
                                 }
                                 else
                                 {
@@ -128,9 +133,16 @@ namespace Regex_Implementation.Sub_Methods
                 }
                 else
                 {
-                    if (regex[i + skipindexregex - 3] == text[i + skipindex - 1])
+                    if ((i + skipindexregex) < regex.Count)
                     {
-                        return true;
+                        if (regex[i + skipindexregex - 3] == text[i + skipindex - 1])
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
                     else
                     {
@@ -139,6 +151,25 @@ namespace Regex_Implementation.Sub_Methods
                 }
             }
             return true;
+        }
+
+        public static string removeinitialduplicates(string input)
+        {
+
+            if (input.Length == 0 || input.All(ch => ch == input[0]))
+            {
+                return "";
+            }
+            char initialcharacter = input[0];
+            for (int i = 0; i < input.Count(); i++)
+            {
+                if (input[i] != initialcharacter)
+                {
+                    return (input.Remove(0, i));
+                }
+            }
+
+            return input;
         }
 
         public static void asterixcheck(string p)
@@ -172,20 +203,20 @@ namespace Regex_Implementation.Sub_Methods
 
         public static bool[,] dynamicbody(string s, string p)
         {
-            for (int i = 1; i < Globals.Properties.rw + 1; i++)
+            for (int x = 1; x < Globals.Properties.rw + 1; x++)
             {
-                for (int j = 1; j < Globals.Properties.clm + 1; j++)
+                for (int i = 1; i < Globals.Properties.clm + 1; i++)
                 {
-                    if (s[i - 1] == p[j - 1] || p[j - 1] == '.')
+                    if (s[x - 1] == p[i - 1] || p[i - 1] == '.')
                     {
-                        Globals.Properties.board[i, j] = Globals.Properties.board[i - 1, j - 1];
+                        Globals.Properties.board[x, i] = Globals.Properties.board[x - 1, i - 1];
                     }
-                    else if (j > 1 && p[j - 1] == '*')
+                    else if (i > 1 && p[i - 1] == '*')
                     {
-                        Globals.Properties.board[i, j] = Globals.Properties.board[i, j - 2];
-                        if (p[j - 2] == '.' || p[j - 2] == s[i - 1])
+                        Globals.Properties.board[x, i] = Globals.Properties.board[x, i - 2];
+                        if (p[i - 2] == '.' || p[i - 2] == s[x - 1])
                         {
-                            Globals.Properties.board[i, j] = Globals.Properties.board[i, j] | Globals.Properties.board[i - 1, j];
+                            Globals.Properties.board[x, i] = Globals.Properties.board[x, i] | Globals.Properties.board[x - 1, i];
                         }
                     }
                 }

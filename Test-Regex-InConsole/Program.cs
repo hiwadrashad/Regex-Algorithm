@@ -58,6 +58,10 @@ namespace Test_Regex_InConsole
                     if ((i + skipindex) < text.Count)
                     {
 
+                        if (regex[i + skipindexregex] == '*')
+                        {
+                            skipindexregex = skipindexregex + 1;
+                        }
                         if ((text[i + skipindex] == regex[i + skipindexregex]) || (regex[i + skipindexregex] == '.'))
                         {
 
@@ -105,9 +109,10 @@ namespace Test_Regex_InConsole
                             if (i + 1 < regex.Count)
                             {
 
-                                if (regex[i + 1] == '*')
+                                if (regex[i + 1 + skipindexregex] == '*')
                                 {
-                                    skipindexregex = skipindexregex + 2;
+                                    skipindex = skipindex - 1;
+                                    skipindexregex = skipindexregex + 1;
                                 }
                                 else
                                 {
@@ -128,9 +133,16 @@ namespace Test_Regex_InConsole
                 }
                 else
                 {
-                    if (regex[i + skipindexregex - 3] == text[i + skipindex -1])
+                    if ((i + skipindexregex) < regex.Count)
                     {
-                        return true;
+                        if (regex[i + skipindexregex - 3] == text[i + skipindex - 1])
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
                     else
                     {
@@ -145,7 +157,18 @@ namespace Test_Regex_InConsole
 
             List<char> segregatedinput = s.ToCharArray().ToList();
             List<char> segregatedandcleanedregex = RemoveUneccessaryDuplicates(p);
-            if (p.Contains(".*"))
+            if (!p.Contains(".") && !p.Contains("*"))
+            {
+                if (s != p)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            if (p == ".*")
             {
                 return true;
             }
@@ -160,10 +183,192 @@ namespace Test_Regex_InConsole
             }
 
         }
+
+
+
+            public bool isMatch(string text, string pattern)
+            {
+            if (pattern.IsNullOrWhiteSpace())
+            { 
+                return true; 
+            }
+              bool first_match = (!text.IsNullOrWhiteSpace() &&
+                                   (pattern[0] == text[0] || pattern[0] == '.'));
+
+            if (pattern.Count() >= 2 && pattern[1] == '*')
+            {
+                return (isMatch(text, pattern.Remove(0,2)) ||
+                        (first_match && isMatch(text.Remove(0,1), pattern)));
+            }
+            else
+            {
+                return first_match && isMatch(text.Remove(0,1), pattern.Remove(0,1));
+            }
+        }
+
+
+
+
+
+        public static string removeinitialduplicates(string input)
+        {
+            if (input.Length == 0 || input.All(ch => ch == input[0]))
+            {
+                return "";
+            }
+            char initialcharacter = input[0];
+            for (int i = 0; i < input.Count(); i++)
+            {
+                if (input[i] != initialcharacter)
+                {
+                    return (input.Remove(0, i));
+                }
+            }
+
+            return input;
+        }
+
+
+        //public static bool recursivematch(string text, string pattern)
+        //{
+        //    if (pattern == ".*")
+        //    {
+        //        return true;
+        //    }
+        //    if (pattern != "" && text == "")
+        //    {
+        //        return false;
+        //    }
+        //    if (pattern == "" && text != "")
+        //    {
+        //        return false;
+        //    }
+        //    if (cycles != 0)
+        //    {
+        //        if (pattern == "")
+        //        {
+        //            return true;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        cycles = cycles + 1;
+        //    }
+        //    bool first_match = ((pattern[0] == text[0] || pattern[0] == '.'));
+           
+        //    if (first_match == false)
+        //    {
+        //        if (pattern.Length > 1)
+        //        {
+        //            if (! (pattern[1] == '*'))
+        //            {
+        //                return false;
+        //            }
+        //        }
+        //    }
+
+        //    if (pattern.Count() >= 2 && pattern[1] == '*' && !first_match)
+        //    {
+        //        return (recursivematch(text, pattern.Remove(0, 2)));
+        //    }
+        //    if (pattern.Count() >= 2 && pattern[1] == '*')
+        //    {
+        //        var item2 = removeinitialduplicates(text);
+        //        return (recursivematch(removeinitialduplicates(text), pattern.Remove(0, 2)));
+        //    }
+        //    else
+        //    {
+        //        return recursivematch(text.Remove(0, 1), pattern.Remove(0, 1));
+        //    }
+        //}
+
+        public static int cycles = 0;
+
+        public static List<string> wildcardcharacters = new List<string>();
+        public static bool IsMatch(string text, string pattern)
+        {
+            if (pattern == "" && text == "")
+            {
+                return true;
+            }
+            pattern = new string (RemoveUneccessaryDuplicates(pattern).ToArray());
+            if (pattern == ".*")
+            {
+                return true;
+            }
+            if (pattern != "" && text == "" && wildcardcharacters.Count == 0)
+            {
+                return false;
+            }
+            if (pattern == "" && text != "" && wildcardcharacters.Count == 0)
+            {
+                return false;
+            }
+            else
+            {
+                cycles = cycles + 1;
+            }
+
+            bool first_match;
+
+            if (text == "" && wildcardcharacters.Count > 0)
+            {
+                first_match = false;
+            }
+            else
+            {
+                first_match = ((pattern[0] == text[0] || pattern[0] == '.') || wildcardcharacters.Contains(pattern[0].ToString()));
+            }
+
+
+            if (first_match == false)
+            {
+                if (pattern.Length > 1)
+                {
+                    if (!(pattern[1] == '*'))
+                    {
+                        return false;
+                    }
+                }
+            }
+            if (pattern.Count() >= 2 && pattern[1] == '*' && !first_match)
+            {
+                wildcardcharacters.Add(pattern[0].ToString());
+                return (IsMatch(text, pattern.Remove(0, 2)));
+            }
+            if (pattern.Count() >= 2 && pattern[1] == '*')
+            {
+                wildcardcharacters.Add(pattern[0].ToString());
+                return (IsMatch(removeinitialduplicates(text), pattern.Remove(0, 2)));
+            }
+            else
+            {
+                wildcardcharacters.Clear();
+                if (text.Count() == 0 && pattern.Count() != 0)
+                {
+                    return IsMatch(text, pattern.Remove(0, 1));
+                }
+                else if (text.Count() != 0 && pattern.Count() == 0)
+                {
+                    return IsMatch(text.Remove(0, 1), pattern);
+                }
+                else if (text.Count() == 0 && pattern.Count() == 0)
+                {
+                    return IsMatch(text, pattern);
+                }
+                else
+                {
+                    return IsMatch(text.Remove(0, 1), pattern.Remove(0, 1));
+                }
+            }
+        }
+
+
+
         static void Main(string[] args)
         {
-            var test = matches("aab", "a*a*b*").ToString();
-            Console.WriteLine(test);
+            bool something = IsMatch("aaa", "ab*a*c*a");
+            Console.WriteLine(something);
         }
     }
 }

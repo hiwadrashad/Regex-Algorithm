@@ -43,32 +43,63 @@ namespace Regex_Test.Tests
         [Fact]
         public void SINGLE_CHARACTER_INPUT_NON_REGEX_DYNAMIC()
         {
-            Assert.False(Regex_Implementation.Non_Regex.Non_Regex_Implementation.linearmatches("aa", "a"));
+            Assert.False(Regex_Implementation.Non_Regex.Non_Regex_Implementation.dynamicprogrammingmatches("aa", "a"));
         }
 
         [Fact]
         public void SINGLE_CHARACTER_ZERO_OR_MORE_INPUT_NON_REGEX_DYNAMIC()
         {
-            Assert.True(Regex_Implementation.Non_Regex.Non_Regex_Implementation.linearmatches("aa", "a*"));
+            Assert.True(Regex_Implementation.Non_Regex.Non_Regex_Implementation.dynamicprogrammingmatches("aa", "a*"));
         }
 
         [Fact]
         public void ZERO_OR_MORE_ANY_CHARACTER_INPUT_NON_REGEX_DYNAMIC()
         {
-            Assert.True(Regex_Implementation.Non_Regex.Non_Regex_Implementation.linearmatches("ab", ".*"));
+            Assert.True(Regex_Implementation.Non_Regex.Non_Regex_Implementation.dynamicprogrammingmatches("ab", ".*"));
         }
 
         [Fact]
         public void MULTIPLE_CHARACHTER_ZERO_OR_MORE_ANY_CHARACTER_INPUT_NON_REGEX_DYNAMIC()
         {
-            Assert.True(Regex_Implementation.Non_Regex.Non_Regex_Implementation.linearmatches("aab", "c*a*b"));
+            Assert.True(Regex_Implementation.Non_Regex.Non_Regex_Implementation.dynamicprogrammingmatches("aab", "c*a*b"));
         }
 
 
         [Fact]
         public void MISSISSIPI_INPUT_NON_REGEX_DYNAMIC()
         {
-            Assert.False(Regex_Implementation.Non_Regex.Non_Regex_Implementation.linearmatches("mississippi", "mis*is*p*"));
+            Assert.False(Regex_Implementation.Non_Regex.Non_Regex_Implementation.dynamicprogrammingmatches("mississippi", "mis*is*p*"));
+        }
+
+        [Fact]
+        public void SINGLE_CHARACTER_INPUT_NON_REGEX_RECURSIVE()
+        {
+            Assert.False(Regex_Implementation.Non_Regex.Non_Regex_Implementation.recursivematch("aa", "a"));
+        }
+
+        [Fact]
+        public void SINGLE_CHARACTER_ZERO_OR_MORE_INPUT_NON_REGEX_RECURSIVE()
+        {
+            Assert.True(Regex_Implementation.Non_Regex.Non_Regex_Implementation.recursivematch("aa", "a*"));
+        }
+
+        [Fact]
+        public void ZERO_OR_MORE_ANY_CHARACTER_INPUT_NON_REGEX_RECURSIVE()
+        {
+            Assert.True(Regex_Implementation.Non_Regex.Non_Regex_Implementation.recursivematch("ab", ".*"));
+        }
+
+        [Fact]
+        public void MULTIPLE_CHARACHTER_ZERO_OR_MORE_ANY_CHARACTER_INPUT_NON_REGEX_RECURSIVE()
+        {
+            Assert.True(Regex_Implementation.Non_Regex.Non_Regex_Implementation.recursivematch("aab", "c*a*b"));
+        }
+
+
+        [Fact]
+        public void MISSISSIPI_INPUT_NON_REGEX_RECURSIVE()
+        {
+            Assert.False(Regex_Implementation.Non_Regex.Non_Regex_Implementation.recursivematch("mississippi", "mis*is*p*"));
         }
     }
 }

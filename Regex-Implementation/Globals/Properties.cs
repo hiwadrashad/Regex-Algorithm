@@ -11,5 +11,6 @@ namespace Regex_Implementation.Globals
         public static int rw;
         public static int clm;
         public static bool[,] board;
+        public static int cycles = 0;
     }
 }

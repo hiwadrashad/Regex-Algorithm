@@ -31,6 +31,51 @@ namespace Regex_Implementation.Non_Regex
 
         }
 
+        public static bool recursivematch(string text, string pattern)
+        {
+            if (pattern == ".*")
+            {
+                return true;
+            }
+            if (pattern == "" && text != "")
+            {
+                return false;
+            }
+            if (Globals.Properties.cycles != 0)
+            {
+                if (text == "")
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                Globals.Properties.cycles = Globals.Properties.cycles + 1;
+            }
+            bool first_match = ((pattern[0] == text[0] || pattern[0] == '.'));
+
+            if (first_match == false)
+            {
+                if (pattern.Length > 1)
+                {
+                    if (!(pattern[1] == '*'))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            if (pattern.Count() >= 2 && pattern[1] == '*')
+            {
+
+                return (recursivematch(Sub_Methods.Regex_Sub_Methods.removeinitialduplicates(text), pattern.Remove(0, 2)));
+            }
+            else
+            {
+                return first_match && recursivematch(text.Remove(0, 1), pattern.Remove(0, 1));
+            }
+        }
+
 
 
         public static bool? dynamicprogrammingmatches(string s, string p)
