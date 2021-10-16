@@ -49,34 +49,121 @@ namespace Test_Regex_InConsole
 
         public static bool IterateSubstrings(List<char> text, List<char> regex)
         {
-            for (int i = 0; i < text.Count; i++)
+            int skipindex = 0;
+            int skipindexregex = 0;
+            for (int i = 0; i < regex.Count; i++)
             {
-                for ()
-                { 
-                
+                if (i + skipindexregex < regex.Count)
+                {
+                    if ((i + skipindex) < text.Count)
+                    {
+
+                        if ((text[i + skipindex] == regex[i + skipindexregex]) || (regex[i + skipindexregex] == '.'))
+                        {
+
+                            if (i + skipindexregex + 1 < regex.Count)
+                            {
+
+                                if (regex[i + skipindexregex + 1] == '*')
+                                {
+                                    if ((i + skipindex + 1) < text.Count)
+                                    {
+
+                                        for (int x = (i + skipindex) + 1; x < text.Count; x++)
+                                        {
+                                            if (text[x] == text[i + skipindex])
+                                            {
+                                                skipindex = skipindex = skipindex + 1;
+                                            }
+                                            else
+                                            {
+                                                break;
+                                            }
+                                        }
+
+
+                                    }
+
+                                }
+
+                            }
+                            else
+                            {
+                                if ((i + skipindex + 1) != text.Count)
+                                {
+                                    return false;
+                                }
+                                else
+                                {
+                                    return true;
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            if (i + 1 < regex.Count)
+                            {
+
+                                if (regex[i + 1] == '*')
+                                {
+                                    skipindexregex = skipindexregex + 2;
+                                }
+                                else
+                                {
+                                    return false;
+                                }
+
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    if (regex[i + skipindexregex - 3] == text[i + skipindex -1])
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
             }
+            return true;
         }
         public static bool matches(string s, string p)
         {
 
             List<char> segregatedinput = s.ToCharArray().ToList();
             List<char> segregatedandcleanedregex = RemoveUneccessaryDuplicates(p);
-            if (s.Contains(".*"))
+            if (p.Contains(".*"))
             {
                 return true;
             }
-            else 
+            else
+            if (s == p)
             {
-               
+                return true;
             }
-            return false;
+            else
+            {
+              return IterateSubstrings(segregatedinput,segregatedandcleanedregex);
+            }
 
         }
         static void Main(string[] args)
         {
-            var CleanedCharList = RemoveUneccessaryDuplicates("ba*aab*");
-            Console.WriteLine();
+            var test = matches("aab", "a*a*b*").ToString();
+            Console.WriteLine(test);
         }
     }
 }
