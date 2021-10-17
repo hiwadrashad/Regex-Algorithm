@@ -12,5 +12,7 @@ namespace Regex_Implementation.Globals
         public static int clm;
         public static bool[,] board;
         public static int cycles = 0;
+        public static List<string> wildcardcharacters = new List<string>();
+        public static string textclone = "";
     }
 }

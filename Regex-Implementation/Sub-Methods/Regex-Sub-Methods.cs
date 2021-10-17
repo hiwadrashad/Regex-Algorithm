@@ -172,6 +172,71 @@ namespace Regex_Implementation.Sub_Methods
             return input;
         }
 
+        public static void emptyboard(int patternlength, bool[,] prototypeboard)
+        {
+            for (int i = 0; i < patternlength + 1; i++)
+            {
+                for (int j = 0; j < patternlength + 1; j++)
+                {
+                    prototypeboard[i, j] = false;
+                }
+            }
+        }
+
+        public static void dynamicprototypebody(string str, string pattern, bool[,] prototypeboard,int textlength, int patternlength)
+        {
+            for (int j = 1; j <= patternlength; j++)
+            {
+                if (pattern[j - 1] == '*')
+                {
+                    prototypeboard[0, j] = prototypeboard[0, j - 1];
+                }
+            }
+
+            for (int i = 1; i <= textlength; i++)
+            {
+                for (int j = 1; j <= patternlength; j++)
+                {
+
+                    if (pattern[j - 1] == '*')
+                    {
+                        prototypeboard[i, j] = prototypeboard[i, j - 1]
+                                       || prototypeboard[i - 1, j];
+                    }
+                    else if (pattern[j - 1] == '.'
+                             || str[i - 1] == pattern[j - 1])
+                    {
+                        prototypeboard[i, j] = prototypeboard[i - 1, j - 1];
+                    }
+
+                    else
+                    {
+                        prototypeboard[i, j] = false;
+                    }
+                }
+            }
+        }
+
+        public static bool dynamicprototype(string str,
+                 string pattern,
+                 int textlength, int patternlength)
+        {
+            if (pattern == ".*")
+            {
+                return true;
+            }
+            if (patternlength == 0)
+            {
+                return (textlength == 0);
+            }
+
+            bool[,] prototypeboard = new bool[textlength + 1, patternlength + 1];
+            emptyboard(patternlength,prototypeboard);
+            prototypeboard[0, 0] = true;
+            dynamicprototypebody(str,pattern,prototypeboard,textlength,patternlength);
+            return prototypeboard[textlength, patternlength];
+        }
+
         public static void asterixcheck(string p)
         {
             Globals.Properties.board = new bool[Globals.Properties.rw + 1, Globals.Properties.clm + 1];
