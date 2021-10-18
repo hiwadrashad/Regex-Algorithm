@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31605.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test-Regex-InConsole", "Test-Regex-InConsole\Test-Regex-InConsole.csproj", "{B40994A6-41FD-4BE0-AE7E-93E07D090D15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test-Regex-In-Console", "Test-Regex-InConsole\Test-Regex-In-Console.csproj", "{B40994A6-41FD-4BE0-AE7E-93E07D090D15}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Regex-Test", "Regex-Test\Regex-Test.csproj", "{4B902D69-070D-49A2-8F90-4CA8C29E37CF}"
 EndProject

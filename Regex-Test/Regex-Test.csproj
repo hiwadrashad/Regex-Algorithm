@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Regex-Implementation\Regex-Implementation.csproj" />
-    <ProjectReference Include="..\Test-Regex-InConsole\Test-Regex-InConsole.csproj" />
+    <ProjectReference Include="..\Test-Regex-InConsole\Test-Regex-In-Console.csproj" />
   </ItemGroup>
 
 </Project>
