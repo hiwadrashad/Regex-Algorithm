@@ -240,15 +240,15 @@ namespace Regex_Implementation.Sub_Methods
             return prototypeboard[textlength, patternlength];
         }
 
-        public static void asterixcheck(string p)
+        public static void asterixcheck(string pattern)
         {
             board = new bool[rw + 1, clm + 1];
             board[0, 0] = true;
-            for (int i = 2; i < clm + 1; i++)
+            for (int index = 2; index < clm + 1; index++)
             {
-                if (p[i - 1] == '*')
+                if (pattern[index - 1] == '*')
                 {
-                    board[0, i] = board[0, i - 2];
+                    board[0, index] = board[0, index - 2];
                 }
             }
         }
@@ -269,22 +269,22 @@ namespace Regex_Implementation.Sub_Methods
             }
         }
 
-        public static bool[,] dynamicbody(string s, string p)
+        public static bool[,] dynamicbody(string text, string pattern)
         {
-            for (int x = 1; x < rw + 1; x++)
+            for (int index1 = 1; index1 < rw + 1; index1++)
             {
-                for (int i = 1; i < clm + 1; i++)
+                for (int index2 = 1; index2 < clm + 1; index2++)
                 {
-                    if (s[x - 1] == p[i - 1] || p[i - 1] == '.')
+                    if (text[index1 - 1] == pattern[index2 - 1] || pattern[index2 - 1] == '.')
                     {
-                        board[x, i] = board[x - 1, i - 1];
+                        board[index1, index2] = board[index1 - 1, index2 - 1];
                     }
-                    else if (i > 1 && p[i - 1] == '*')
+                    else if (index2 > 1 && pattern[index2 - 1] == '*')
                     {
-                        board[x, i] = board[x, i - 2];
-                        if (p[i - 2] == '.' || p[i - 2] == s[x - 1])
+                        board[index1, index2] = board[index1, index2 - 2];
+                        if (pattern[index2 - 2] == '.' || pattern[index2 - 2] == text[index1 - 1])
                         {
-                            board[x, i] = board[x, i] | board[x - 1, i];
+                            board[index1, index2] = board[index1, index2] | board[index1 - 1, index2];
                         }
                     }
                 }
@@ -293,88 +293,88 @@ namespace Regex_Implementation.Sub_Methods
             return board;
         }
 
-        public static void cleanrecursive(int columns, string pattern, bool[,] board, int x)
+        public static void cleanrecursive(int columns, string pattern, bool[,] board, int index)
         {
-            if (x >= columns + 1)
+            if (index >= columns + 1)
             {
                 return;
             }
-            if (pattern[x - 1] == '*')
+            if (pattern[index - 1] == '*')
             {
-                board[0, x] = board[0, x - 2];
+                board[0, index] = board[0, index - 2];
             }
-            x = x + 1;
-            cleanrecursive(columns, pattern, board, x);
+            index = index + 1;
+            cleanrecursive(columns, pattern, board, index);
         }
 
-        public static void recursivesubbody(int columns, string text, string pattern, bool[,] board, int i, int j)
+        public static void recursivesubbody(int columns, string text, string pattern, bool[,] board, int index, int index2)
         {
-            if (j >= columns + 1)
+            if (index2 >= columns + 1)
             {
                 return;
             }
-            if (pattern[j - 1] == '.' || text[i - 1] == pattern[j - 1])
+            if (pattern[index2 - 1] == '.' || text[index - 1] == pattern[index2 - 1])
             {
-                board[i, j] = board[i - 1, j - 1];
+                board[index, index2] = board[index - 1, index2 - 1];
             }
-            else if (pattern[j - 1] == '*' && j > 1)
+            else if (pattern[index2 - 1] == '*' && index2 > 1)
             {
-                board[i, j] = board[i, j - 2];
-                if (pattern[j - 2] == text[i - 1] || pattern[j - 2] == '.')
+                board[index, index2] = board[index, index2 - 2];
+                if (pattern[index2 - 2] == text[index - 1] || pattern[index2 - 2] == '.')
                 {
-                    board[i, j] = board[i - 1, j] | board[i, j];
+                    board[index, index2] = board[index - 1, index2] | board[index, index2];
                 }
             }
 
-            j = j + 1;
-            recursivesubbody(columns, text, pattern, board, i, j);
+            index2 = index2 + 1;
+            recursivesubbody(columns, text, pattern, board, index, index2);
 
         }
 
-        public static void recursivemainbody(int rows, int columns, string text, string pattern, bool[,] board, int i)
+        public static void recursivemainbody(int rows, int columns, string text, string pattern, bool[,] board, int index)
         {
-            if (i >= rows + 1)
+            if (index >= rows + 1)
             {
                 return;
             }
-            recursivesubbody(columns, text, pattern, board, i, 1);
-            i = i + 1;
-            recursivemainbody(rows, columns, text, pattern, board, i);
+            recursivesubbody(columns, text, pattern, board, index, 1);
+            index = index + 1;
+            recursivemainbody(rows, columns, text, pattern, board, index);
         }
 
-        public static bool recursive3(string s, string p, int i, int j)
+        public static bool recursive3(string text, string pattern, int index, int index2)
         {
-            if (i == s.Count() && j == p.Count())
+            if (index == text.Count() && index2 == pattern.Count())
             {
                 return true;
             }
-            if (i == s.Count() && j <= p.Count() - 2 && p[j + 1] == '*')
+            if (index == text.Count() && index2 <= pattern.Count() - 2 && pattern[index2 + 1] == '*')
             {
-                return recursive3(s, p, i, j + 2);
+                return recursive3(text, pattern, index, index2 + 2);
             }
 
-            if (j == p.Count() || i == s.Count())
+            if (index2 == pattern.Count() || index == text.Count())
             {
                 return false;
             }
 
 
-            if (p[j] == '.' && j + 1 < p.Count() && p[j + 1] == '*')
+            if (pattern[index2] == '.' && index2 + 1 < pattern.Count() && pattern[index2 + 1] == '*')
             {
-                return recursive3(s, p, i + 1, j) || recursive3(s, p, i, j + 2);
+                return recursive3(text, pattern, index + 1, index2) || recursive3(text, pattern, index, index2 + 2);
             }
 
-            if (j + 1 < p.Count() && p[j + 1] == '*')
+            if (index2 + 1 < pattern.Count() && pattern[index2 + 1] == '*')
             {
-                return recursive3(s, p, i, j + 2) || (s[i] == p[j] && recursive3(s, p, i + 1, j));
+                return recursive3(text, pattern, index, index2 + 2) || (text[index] == pattern[index2] && recursive3(text, pattern, index + 1, index2));
             }
 
-            if (p[j] == '.')
+            if (pattern[index2] == '.')
             {
-                return recursive3(s, p, i + 1, j + 1);
+                return recursive3(text, pattern, index + 1, index2 + 1);
             }
 
-            return (s[i] == p[j] && recursive3(s, p, i + 1, j + 1));
+            return (text[index] == pattern[index2] && recursive3(text, pattern, index + 1, index2 + 1));
         }
     }
 }
