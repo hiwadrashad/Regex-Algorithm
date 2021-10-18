@@ -10,6 +10,45 @@ namespace Regex_Implementation.Non_Regex
     public class Non_Regex_Implementation
     {
 
+
+        public static bool recursivematches2(string text, string pattern)
+        {
+            int rows = text.Count();
+            int columns = pattern.Count();
+            if (rows == 0 && columns == 0)
+            {
+                return true;
+            }
+            if (columns == 0)
+            {
+                return false;
+            }
+
+            bool[,] board = new bool[rows + 1, columns + 1];
+            board[0, 0] = true;
+
+
+            Sub_Methods.Regex_Sub_Methods.cleanrecursive(columns, pattern, board, 2);
+
+            Sub_Methods.Regex_Sub_Methods.recursivemainbody(rows, columns, text, pattern, board, 1);
+
+            return board[rows, columns];
+        }
+
+        public static bool? dynamicprogrammingmatches(string s, string p)
+        {
+            Globals.Properties.clm = p.Length;
+            Globals.Properties.rw = s.Length;
+            var finalcheckvalue = Sub_Methods.Regex_Sub_Methods.finalcheck(Globals.Properties.rw, Globals.Properties.clm);
+            if (finalcheckvalue != null)
+            {
+                return finalcheckvalue;
+            }
+            Sub_Methods.Regex_Sub_Methods.asterixcheck(p);
+            var finishedboard = Sub_Methods.Regex_Sub_Methods.dynamicbody(s, p);
+            return Globals.Properties.board[Globals.Properties.rw, Globals.Properties.clm];
+        }
+
         public static bool linearmatches(string s, string p)
         {
 
@@ -175,43 +214,5 @@ namespace Regex_Implementation.Non_Regex
             }
         }
 
-
-        public static bool recursivematches2(string text, string pattern)
-        {
-            int rows = text.Count();
-            int columns = pattern.Count();
-            if (rows == 0 && columns == 0)
-            {
-                return true;
-            }
-            if (columns == 0)
-            {
-                return false;
-            }
-
-            bool[,] board = new bool[rows + 1, columns + 1];
-            board[0, 0] = true;
-
-
-            Sub_Methods.Regex_Sub_Methods.cleanrecursive(columns, pattern, board, 2);
-
-            Sub_Methods.Regex_Sub_Methods.recursivemainbody(rows, columns, text, pattern, board, 1);
-
-            return board[rows, columns];
-        }
-
-        public static bool? dynamicprogrammingmatches(string s, string p)
-        {
-            Globals.Properties.clm = p.Length;
-            Globals.Properties.rw = s.Length;
-            var finalcheckvalue = Sub_Methods.Regex_Sub_Methods.finalcheck(Globals.Properties.rw, Globals.Properties.clm);
-            if (finalcheckvalue != null)
-            {
-                return finalcheckvalue;
-            }
-            Sub_Methods.Regex_Sub_Methods.asterixcheck(p);
-            var finishedboard = Sub_Methods.Regex_Sub_Methods.dynamicbody(s,p);
-            return Globals.Properties.board[Globals.Properties.rw, Globals.Properties.clm];
-        }
     }
 }
