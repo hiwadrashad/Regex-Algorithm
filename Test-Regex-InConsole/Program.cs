@@ -434,10 +434,83 @@ namespace Test_Regex_InConsole
             }
         }
 
+        public static void cleanrecursive(int columns, string pattern, bool[,] board, int x)
+        {
+            if (x >= columns + 1)
+            {
+                return;
+            }
+            if (pattern[x - 1] == '*')
+            {
+                board[0, x] = board[0, x - 2];
+            }
+            x = x + 1;
+            cleanrecursive(columns, pattern, board, x);
+        }
+
+        public static void recursivesubbody(int columns, string text, string pattern, bool[,] board, int i, int j)
+        {
+            if (j >= columns + 1)
+            {
+                return;
+            }
+                if (pattern[j - 1] == '.' || text[i - 1] == pattern[j - 1])
+                {
+                    board[i, j] = board[i - 1, j - 1];
+                }
+                else if (pattern[j - 1] == '*' && j > 1)
+                {
+                    board[i, j] = board[i, j - 2];
+                    if (pattern[j - 2] == text[i - 1] || pattern[j - 2] == '.')
+                    {
+                        board[i, j] = board[i - 1, j] | board[i, j] ;
+                    }
+                }
+            
+            j = j + 1;
+            recursivesubbody(columns, text, pattern, board, i, j);
+
+        }
+
+        public static void recursivemainbody(int rows, int columns, string text, string pattern, bool[,] board, int i)
+        {
+            if (i >= rows +1)
+            {
+                return;
+            }
+            recursivesubbody(columns,text,pattern,board,i,1);
+            i = i + 1;
+            recursivemainbody(rows,columns, text, pattern,board,i);
+        }
+
+        public static bool recursivematches2(string text, string pattern)
+        {
+            int rows = text.Count();
+            int columns = pattern.Count();
+            if (rows == 0 && columns == 0)
+            {
+                return true;
+            }
+            if (columns == 0)
+            {
+                return false;
+            }
+
+            bool[,] board = new bool[rows + 1,columns + 1];
+            board[0, 0] = true;
+
+
+            cleanrecursive(columns, pattern, board, 2);
+
+            recursivemainbody(rows, columns, text, pattern, board, 1);
+
+            return board[rows,columns];
+        }
+
  
         static void Main(string[] args)
         {
-            bool something = IsMatch("aaa", "ab*a*c*a");
+            bool something = recursivematches2("aa", "a");
             Console.WriteLine(something);
         }
     }

@@ -47,8 +47,10 @@ namespace Regex_Implementation.Sub_Methods
 
         }
 
+
         public static bool IterateSubstrings(List<char> text, List<char> regex)
         {
+            
             int skipindex = 0;
             int skipindexregex = 0;
             for (int i = 0; i < regex.Count; i++)
@@ -288,6 +290,55 @@ namespace Regex_Implementation.Sub_Methods
             }
 
             return Globals.Properties.board;
+        }
+
+        public static void cleanrecursive(int columns, string pattern, bool[,] board, int x)
+        {
+            if (x >= columns + 1)
+            {
+                return;
+            }
+            if (pattern[x - 1] == '*')
+            {
+                board[0, x] = board[0, x - 2];
+            }
+            x = x + 1;
+            cleanrecursive(columns, pattern, board, x);
+        }
+
+        public static void recursivesubbody(int columns, string text, string pattern, bool[,] board, int i, int j)
+        {
+            if (j >= columns + 1)
+            {
+                return;
+            }
+            if (pattern[j - 1] == '.' || text[i - 1] == pattern[j - 1])
+            {
+                board[i, j] = board[i - 1, j - 1];
+            }
+            else if (pattern[j - 1] == '*' && j > 1)
+            {
+                board[i, j] = board[i, j - 2];
+                if (pattern[j - 2] == text[i - 1] || pattern[j - 2] == '.')
+                {
+                    board[i, j] = board[i - 1, j] | board[i, j];
+                }
+            }
+
+            j = j + 1;
+            recursivesubbody(columns, text, pattern, board, i, j);
+
+        }
+
+        public static void recursivemainbody(int rows, int columns, string text, string pattern, bool[,] board, int i)
+        {
+            if (i >= rows + 1)
+            {
+                return;
+            }
+            recursivesubbody(columns, text, pattern, board, i, 1);
+            i = i + 1;
+            recursivemainbody(rows, columns, text, pattern, board, i);
         }
     }
 }
