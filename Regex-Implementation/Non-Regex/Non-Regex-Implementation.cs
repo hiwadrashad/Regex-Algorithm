@@ -4,6 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Regex_Implementation.Extension_Methods;
+using Regex_Implementation.Globals;
+using Regex_Implementation.Sub_Methods;
+using static Regex_Implementation.Globals.Properties;
+using static Regex_Implementation.Sub_Methods.Regex_Sub_Methods;
 
 namespace Regex_Implementation.Non_Regex
 {
@@ -12,51 +16,51 @@ namespace Regex_Implementation.Non_Regex
 
         public bool recusrivematches3(string s, string p)
         {
-            return Sub_Methods.Regex_Sub_Methods.recursive3(s, p, 0, 0);
+            return recursive3(s, p, 0, 0);
         }
         public static bool recursivematches2(string text, string pattern)
         {
-            Globals.Properties.rw = text.Count();
-            Globals.Properties.clm = pattern.Count();
-            if (Globals.Properties.rw == 0 && Globals.Properties.clm == 0)
+            rw = text.Count();
+            clm = pattern.Count();
+            if (rw == 0 && clm == 0)
             {
                 return true;
             }
-            if (Globals.Properties.clm == 0)
+            if (clm == 0)
             {
                 return false;
             }
 
-            bool[,] board = new bool[Globals.Properties.rw + 1, Globals.Properties.clm + 1];
+            bool[,] board = new bool[rw + 1, clm + 1];
             board[0, 0] = true;
 
 
-            Sub_Methods.Regex_Sub_Methods.cleanrecursive(Globals.Properties.clm, pattern, board, 2);
+            cleanrecursive(clm, pattern, board, 2);
 
-            Sub_Methods.Regex_Sub_Methods.recursivemainbody(Globals.Properties.rw, Globals.Properties.clm, text, pattern, board, 1);
+            recursivemainbody(rw, clm, text, pattern, board, 1);
 
-            return board[Globals.Properties.rw, Globals.Properties.clm];
+            return board[rw, clm];
         }
 
         public static bool? dynamicprogrammingmatches(string s, string p)
         {
-            Globals.Properties.clm = p.Length;
-            Globals.Properties.rw = s.Length;
-            var finalcheckvalue = Sub_Methods.Regex_Sub_Methods.finalcheck(Globals.Properties.rw, Globals.Properties.clm);
+            clm = p.Length;
+            rw = s.Length;
+            var finalcheckvalue = finalcheck(rw, clm);
             if (finalcheckvalue != null)
             {
                 return finalcheckvalue;
             }
-            Sub_Methods.Regex_Sub_Methods.asterixcheck(p);
-            var finishedboard = Sub_Methods.Regex_Sub_Methods.dynamicbody(s, p);
-            return Globals.Properties.board[Globals.Properties.rw, Globals.Properties.clm];
+            asterixcheck(p);
+            var finishedboard = dynamicbody(s, p);
+            return board[rw, clm];
         }
 
         public static bool linearmatches(string s, string p)
         {
 
             List<char> segregatedinput = s.ToCharArray().ToList();
-            List<char> segregatedandcleanedregex = Sub_Methods.Regex_Sub_Methods.RemoveUneccessaryDuplicates(p);
+            List<char> segregatedandcleanedregex = RemoveUneccessaryDuplicates(p);
             if (p.Contains(".*"))
             {
                 return true;
@@ -68,51 +72,51 @@ namespace Regex_Implementation.Non_Regex
             }
             else
             {
-                return Sub_Methods.Regex_Sub_Methods.IterateSubstrings(segregatedinput, segregatedandcleanedregex);
+                return IterateSubstrings(segregatedinput, segregatedandcleanedregex);
             }
 
         }
         public static bool recursivematch(string text, string pattern)
         {
-            if (Globals.Properties.textclone == null)
+            if (textclone == null)
             {
-                Globals.Properties.textclone = "";
+                textclone = "";
             }
-            if (Globals.Properties.cycles == 0)
+            if (cycles == 0)
             {
-                Globals.Properties.textclone = (string)text.Clone();
+                textclone = (string)text.Clone();
             }
 
             if (pattern == "" && text == "")
             {
                 return true;
             }
-            pattern = new string(Sub_Methods.Regex_Sub_Methods.RemoveUneccessaryDuplicates(pattern).ToArray());
+            pattern = new string(RemoveUneccessaryDuplicates(pattern).ToArray());
             if (pattern == ".*")
             {
                 return true;
             }
-            if (pattern != "" && text == "" && Globals.Properties.wildcardcharacters.Count == 0 && !pattern.Contains("*"))
+            if (pattern != "" && text == "" && wildcardcharacters.Count == 0 && !pattern.Contains("*"))
             {
                 return false;
             }
-            if (pattern == "" && text != "" && Globals.Properties.wildcardcharacters.Count == 0)
+            if (pattern == "" && text != "" && wildcardcharacters.Count == 0)
             {
                 return false;
             }
             else
             {
-                Globals.Properties.cycles = Globals.Properties.cycles + 1;
+                cycles = cycles + 1;
             }
 
             bool first_match;
 
-            if (text == "" && Globals.Properties.wildcardcharacters.Count > 0)
+            if (text == "" && wildcardcharacters.Count > 0)
             {
                 first_match = false;
             }
             else
-            if (pattern == "" && Globals.Properties.wildcardcharacters.Count > 0)
+            if (pattern == "" && wildcardcharacters.Count > 0)
             {
                 return false;
             }
@@ -120,7 +124,7 @@ namespace Regex_Implementation.Non_Regex
             {
                 try
                 {
-                    first_match = ((pattern[0] == text[0] || pattern[0] == '.') || Globals.Properties.wildcardcharacters.Contains(pattern[0].ToString()));
+                    first_match = ((pattern[0] == text[0] || pattern[0] == '.') || wildcardcharacters.Contains(pattern[0].ToString()));
                 }
 #pragma warning disable CS0168 // Variable is declared but never used
                 catch (IndexOutOfRangeException ex)
@@ -139,11 +143,11 @@ namespace Regex_Implementation.Non_Regex
                 {
                     if (!(pattern[1] == '*'))
                     {
-                        if (Globals.Properties.textclone.Count() > 0)
+                        if (textclone.Count() > 0)
                         {
-                            if (Globals.Properties.textclone[0] == pattern[0])
+                            if (textclone[0] == pattern[0])
                             {
-                                Globals.Properties.textclone = Globals.Properties.textclone.Remove(0, 1);
+                                textclone = textclone.Remove(0, 1);
                                 return (recursivematch(text, pattern.Remove(0, 1)));
                             }
                             else
@@ -158,17 +162,17 @@ namespace Regex_Implementation.Non_Regex
                     }
                     else
                     {
-                        Globals.Properties.wildcardcharacters.Add(pattern[0].ToString());
+                        wildcardcharacters.Add(pattern[0].ToString());
                         return (recursivematch(text, pattern.Remove(0, 2)));
                     }
                 }
                 else
                 {
-                    if (Globals.Properties.textclone.Count() > 0)
+                    if (textclone.Count() > 0)
                     {
-                        if (Globals.Properties.textclone[0] == pattern[0])
+                        if (textclone[0] == pattern[0])
                         {
-                            Globals.Properties.textclone = Globals.Properties.textclone.Remove(0, 1);
+                            textclone = textclone.Remove(0, 1);
                             return (recursivematch(text, pattern.Remove(0, 1)));
                         }
                         else
@@ -187,12 +191,12 @@ namespace Regex_Implementation.Non_Regex
             {
                 if (pattern.Count() >= 2 && pattern[1] == '*')
                 {
-                    Globals.Properties.wildcardcharacters.Add(pattern[0].ToString());
-                    return (recursivematch(Sub_Methods.Regex_Sub_Methods.removeinitialduplicates(text), pattern.Remove(0, 2)));
+                    wildcardcharacters.Add(pattern[0].ToString());
+                    return (recursivematch(removeinitialduplicates(text), pattern.Remove(0, 2)));
                 }
                 else
                 {
-                    Globals.Properties.wildcardcharacters.Clear();
+                    wildcardcharacters.Clear();
                     if (text.Count() == 0 && pattern.Count() != 0)
                     {
                         return recursivematch(text, pattern.Remove(0, 1));
@@ -207,9 +211,9 @@ namespace Regex_Implementation.Non_Regex
                     }
                     else
                     {
-                        if (Globals.Properties.textclone.Count() > 0)
+                        if (textclone.Count() > 0)
                         {
-                            Globals.Properties.textclone = Globals.Properties.textclone.Remove(0, 1);
+                            textclone = textclone.Remove(0, 1);
                         }
                         return recursivematch(text.Remove(0, 1), pattern.Remove(0, 1));
                     }
@@ -217,12 +221,12 @@ namespace Regex_Implementation.Non_Regex
             }
         }
 
-        public static bool recursive5match(string s, string p)
+        public static bool recursive5match(string text, string pattern)
         {
 
-            if (p.Count() == 0)
+            if (pattern.Count() == 0)
             {
-                if (s.Count() == 0)
+                if (text.Count() == 0)
                 {
                     return true;
                 }
@@ -232,26 +236,26 @@ namespace Regex_Implementation.Non_Regex
                 }
             }
 
-            if (p.Count() == 1 || p[1] != '*')
+            if (pattern.Count() == 1 || pattern[1] != '*')
             {
-                if (s.Count() < 1 || (p[0] != '.' && s[0] != p[0]))
+                if (text.Count() < 1 || (pattern[0] != '.' && text[0] != pattern[0]))
                 {
                     return false;
                 }
                 else
                 {
-                    return recursive5match(s.Remove(0, 1), p.Remove(0, 1));
+                    return recursive5match(text.Remove(0, 1), pattern.Remove(0, 1));
                 }
 
             }
             else
             {
-                int l = s.Count();
+                int l = text.Count();
 
                 int i = -1;
-                while (i < l && (i < 0 || p[0] == '.' || p[0] == s[i]))
+                while (i < l && (i < 0 || pattern[0] == '.' || pattern[0] == text[i]))
                 {
-                    if (recursive5match(s.Remove(0, i + 1), p.Remove(0, 2)))
+                    if (recursive5match(text.Remove(0, i + 1), pattern.Remove(0, 2)))
                     {
                         return true;
                     }
@@ -261,13 +265,13 @@ namespace Regex_Implementation.Non_Regex
             }
         }
 
-        public static bool linear2matches(string s, string p)
+        public static bool linear2matches(string text, string pattern)
         {
             while (0 == 0)
             {
-                if (p.Count() == 0)
+                if (pattern.Count() == 0)
                 {
-                    if (s.Count() == 0)
+                    if (text.Count() == 0)
                     {
                         return true;
                     }
@@ -277,29 +281,29 @@ namespace Regex_Implementation.Non_Regex
                     }
                 }
 
-                if (p.Count() == 1 || p[1] != '*')
+                if (pattern.Count() == 1 || pattern[1] != '*')
                 {
-                    if (s.Count() < 1 || (p[0] != '.' && s[0] != p[0]))
+                    if (text.Count() < 1 || (pattern[0] != '.' && text[0] != pattern[0]))
                     {
                         return false;
                     }
                     else
                     {
-                        s.Remove(0, 1);
-                        p.Remove(0, 1);
+                        text.Remove(0, 1);
+                        pattern.Remove(0, 1);
                         continue;
                     }
 
                 }
                 else
                 {
-                    int len = s.Count();
+                    int len = text.Count();
 
                     int i = -1;
-                    while (i < len && (i < 0 || p[0] == '.' || p[0] == s[i]))
+                    while (i < len && (i < 0 || pattern[0] == '.' || pattern[0] == text[i]))
                     {
-                        s.Remove(0, i + 1);
-                        p.Remove(0, 2);
+                        text.Remove(0, i + 1);
+                        pattern.Remove(0, 2);
                         continue;
                     }
                     return false;
@@ -307,40 +311,40 @@ namespace Regex_Implementation.Non_Regex
             }
         }
 
-        public static int i = 0;
-        public static int j = 0;
-        public static bool recursive4match(string s, string p)
+        public static int index1 = 0;
+        public static int index2 = 0;
+        public static bool recursive4match(string text, string pattern)
         {
             while (0 == 0)
             {
-                if (i == s.Count() && j == p.Count())
+                if (index1 == text.Count() && index2 == pattern.Count())
                 {
                     return true;
                 }
-                if (i == s.Count() && j <= p.Count() - 2 && p[j + 1] == '*')
+                if (index1 == text.Count() && index2 <= pattern.Count() - 2 && pattern[index2 + 1] == '*')
                 {
-                    j = j + 2;
+                    index2 = index2 + 2;
                     continue;
                 }
-                if (j == p.Count() || i == s.Count())
+                if (index2 == pattern.Count() || index1 == text.Count())
                 {
                     return false;
                 }
 
 
-                if (p[j] == '.' && j + 1 < p.Count() && p[j + 1] == '*')
+                if (pattern[index2] == '.' && index2 + 1 < pattern.Count() && pattern[index2 + 1] == '*')
                 {
-                    i = i + 1;
-                    if (recursive4match(s, p) == false)
+                    index1 = index1 + 1;
+                    if (recursive4match(text, pattern) == false)
                     {
-                        i = i - 1;
+                        index1 = index1 - 1;
                     }
                     else
                     {
                         return true;
                     }
-                    j = j + 2;
-                    if (recursive4match(s, p) == false)
+                    index2 = index2 + 2;
+                    if (recursive4match(text, pattern) == false)
                     {
                         return false;
                     }
@@ -350,19 +354,19 @@ namespace Regex_Implementation.Non_Regex
                     }
                 }
 
-                if (j + 1 < p.Count() && p[j + 1] == '*')
+                if (index2 + 1 < pattern.Count() && pattern[index2 + 1] == '*')
                 {
-                    j = j + 2;
-                    if (recursive4match(s, p) == true)
+                    index2 = index2 + 2;
+                    if (recursive4match(text, pattern) == true)
                     {
-                        j = j - 2;
+                        index2 = index2 - 2;
                     }
                     else
                     {
                         return false;
                     }
-                    i = i + 1;
-                    if (recursive4match(s, p) == true)
+                    index1 = index1 + 1;
+                    if (recursive4match(text, pattern) == true)
                     {
                         return true;
                     }
@@ -372,11 +376,11 @@ namespace Regex_Implementation.Non_Regex
                     }
                 }
 
-                if (p[j] == '.')
+                if (pattern[index2] == '.')
                 {
-                    i = i + 1;
-                    j = j + 1;
-                    if (recursive4match(s, p) == true)
+                    index1 = index1 + 1;
+                    index2 = index2 + 1;
+                    if (recursive4match(text, pattern) == true)
                     {
                         return true;
                     }
@@ -385,15 +389,15 @@ namespace Regex_Implementation.Non_Regex
                         return false;
                     }
                 }
-                if (!(s[i] == p[j]))
+                if (!(text[index1] == pattern[index2]))
                 {
                     return false;
                 }
                 else
                 {
-                    i = i + 1;
-                    j = j + 1;
-                    if (recursive4match(s, p) == true)
+                    index1 = index1 + 1;
+                    index2 = index2 + 1;
+                    if (recursive4match(text, pattern) == true)
                     {
                         return true;
                     }

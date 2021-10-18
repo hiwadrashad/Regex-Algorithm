@@ -14,5 +14,7 @@ namespace Regex_Implementation.Globals
         public static int cycles = 0;
         public static List<string> wildcardcharacters = new List<string>();
         public static string textclone = "";
+        public static string text = "";
+        public static string pattern = "";
     }
 }
