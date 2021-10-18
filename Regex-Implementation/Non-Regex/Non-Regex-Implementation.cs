@@ -10,29 +10,32 @@ namespace Regex_Implementation.Non_Regex
     public class Non_Regex_Implementation
     {
 
-
+        public bool recusrivematches3(string s, string p)
+        {
+            return Sub_Methods.Regex_Sub_Methods.recursive3(s, p, 0, 0);
+        }
         public static bool recursivematches2(string text, string pattern)
         {
-            int rows = text.Count();
-            int columns = pattern.Count();
-            if (rows == 0 && columns == 0)
+            Globals.Properties.rw = text.Count();
+            Globals.Properties.clm = pattern.Count();
+            if (Globals.Properties.rw == 0 && Globals.Properties.clm == 0)
             {
                 return true;
             }
-            if (columns == 0)
+            if (Globals.Properties.clm == 0)
             {
                 return false;
             }
 
-            bool[,] board = new bool[rows + 1, columns + 1];
+            bool[,] board = new bool[Globals.Properties.rw + 1, Globals.Properties.clm + 1];
             board[0, 0] = true;
 
 
-            Sub_Methods.Regex_Sub_Methods.cleanrecursive(columns, pattern, board, 2);
+            Sub_Methods.Regex_Sub_Methods.cleanrecursive(Globals.Properties.clm, pattern, board, 2);
 
-            Sub_Methods.Regex_Sub_Methods.recursivemainbody(rows, columns, text, pattern, board, 1);
+            Sub_Methods.Regex_Sub_Methods.recursivemainbody(Globals.Properties.rw, Globals.Properties.clm, text, pattern, board, 1);
 
-            return board[rows, columns];
+            return board[Globals.Properties.rw, Globals.Properties.clm];
         }
 
         public static bool? dynamicprogrammingmatches(string s, string p)
@@ -209,6 +212,194 @@ namespace Regex_Implementation.Non_Regex
                             Globals.Properties.textclone = Globals.Properties.textclone.Remove(0, 1);
                         }
                         return recursivematch(text.Remove(0, 1), pattern.Remove(0, 1));
+                    }
+                }
+            }
+        }
+
+        public static bool recursive5match(string s, string p)
+        {
+
+            if (p.Count() == 0)
+            {
+                if (s.Count() == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            if (p.Count() == 1 || p[1] != '*')
+            {
+                if (s.Count() < 1 || (p[0] != '.' && s[0] != p[0]))
+                {
+                    return false;
+                }
+                else
+                {
+                    return recursive5match(s.Remove(0, 1), p.Remove(0, 1));
+                }
+
+            }
+            else
+            {
+                int l = s.Count();
+
+                int i = -1;
+                while (i < l && (i < 0 || p[0] == '.' || p[0] == s[i]))
+                {
+                    if (recursive5match(s.Remove(0, i + 1), p.Remove(0, 2)))
+                    {
+                        return true;
+                    }
+                    i = i + 1;
+                }
+                return false;
+            }
+        }
+
+        public static bool linear2matches(string s, string p)
+        {
+            while (0 == 0)
+            {
+                if (p.Count() == 0)
+                {
+                    if (s.Count() == 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                if (p.Count() == 1 || p[1] != '*')
+                {
+                    if (s.Count() < 1 || (p[0] != '.' && s[0] != p[0]))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        s.Remove(0, 1);
+                        p.Remove(0, 1);
+                        continue;
+                    }
+
+                }
+                else
+                {
+                    int len = s.Count();
+
+                    int i = -1;
+                    while (i < len && (i < 0 || p[0] == '.' || p[0] == s[i]))
+                    {
+                        s.Remove(0, i + 1);
+                        p.Remove(0, 2);
+                        continue;
+                    }
+                    return false;
+                }
+            }
+        }
+
+        public static int i = 0;
+        public static int j = 0;
+        public static bool recursive4match(string s, string p)
+        {
+            while (0 == 0)
+            {
+                if (i == s.Count() && j == p.Count())
+                {
+                    return true;
+                }
+                if (i == s.Count() && j <= p.Count() - 2 && p[j + 1] == '*')
+                {
+                    j = j + 2;
+                    continue;
+                }
+                if (j == p.Count() || i == s.Count())
+                {
+                    return false;
+                }
+
+
+                if (p[j] == '.' && j + 1 < p.Count() && p[j + 1] == '*')
+                {
+                    i = i + 1;
+                    if (recursive4match(s, p) == false)
+                    {
+                        i = i - 1;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                    j = j + 2;
+                    if (recursive4match(s, p) == false)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+
+                if (j + 1 < p.Count() && p[j + 1] == '*')
+                {
+                    j = j + 2;
+                    if (recursive4match(s, p) == true)
+                    {
+                        j = j - 2;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                    i = i + 1;
+                    if (recursive4match(s, p) == true)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                if (p[j] == '.')
+                {
+                    i = i + 1;
+                    j = j + 1;
+                    if (recursive4match(s, p) == true)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                if (!(s[i] == p[j]))
+                {
+                    return false;
+                }
+                else
+                {
+                    i = i + 1;
+                    j = j + 1;
+                    if (recursive4match(s, p) == true)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
                     }
                 }
             }

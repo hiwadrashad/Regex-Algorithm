@@ -340,5 +340,40 @@ namespace Regex_Implementation.Sub_Methods
             i = i + 1;
             recursivemainbody(rows, columns, text, pattern, board, i);
         }
+
+        public static bool recursive3(string s, string p, int i, int j)
+        {
+            if (i == s.Count() && j == p.Count())
+            {
+                return true;
+            }
+            if (i == s.Count() && j <= p.Count() - 2 && p[j + 1] == '*')
+            {
+                return recursive3(s, p, i, j + 2);
+            }
+
+            if (j == p.Count() || i == s.Count())
+            {
+                return false;
+            }
+
+
+            if (p[j] == '.' && j + 1 < p.Count() && p[j + 1] == '*')
+            {
+                return recursive3(s, p, i + 1, j) || recursive3(s, p, i, j + 2);
+            }
+
+            if (j + 1 < p.Count() && p[j + 1] == '*')
+            {
+                return recursive3(s, p, i, j + 2) || (s[i] == p[j] && recursive3(s, p, i + 1, j));
+            }
+
+            if (p[j] == '.')
+            {
+                return recursive3(s, p, i + 1, j + 1);
+            }
+
+            return (s[i] == p[j] && recursive3(s, p, i + 1, j + 1));
+        }
     }
 }
