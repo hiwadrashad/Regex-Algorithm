@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Regex_Implementation.Globals.Properties;
 
 namespace Regex_Implementation.Sub_Methods
 {
@@ -241,13 +242,13 @@ namespace Regex_Implementation.Sub_Methods
 
         public static void asterixcheck(string p)
         {
-            Globals.Properties.board = new bool[Globals.Properties.rw + 1, Globals.Properties.clm + 1];
-            Globals.Properties.board[0, 0] = true;
-            for (int i = 2; i < Globals.Properties.clm + 1; i++)
+            board = new bool[rw + 1, clm + 1];
+            board[0, 0] = true;
+            for (int i = 2; i < clm + 1; i++)
             {
                 if (p[i - 1] == '*')
                 {
-                    Globals.Properties.board[0, i] = Globals.Properties.board[0, i - 2];
+                    board[0, i] = board[0, i - 2];
                 }
             }
         }
@@ -270,26 +271,26 @@ namespace Regex_Implementation.Sub_Methods
 
         public static bool[,] dynamicbody(string s, string p)
         {
-            for (int x = 1; x < Globals.Properties.rw + 1; x++)
+            for (int x = 1; x < rw + 1; x++)
             {
-                for (int i = 1; i < Globals.Properties.clm + 1; i++)
+                for (int i = 1; i < clm + 1; i++)
                 {
                     if (s[x - 1] == p[i - 1] || p[i - 1] == '.')
                     {
-                        Globals.Properties.board[x, i] = Globals.Properties.board[x - 1, i - 1];
+                        board[x, i] = board[x - 1, i - 1];
                     }
                     else if (i > 1 && p[i - 1] == '*')
                     {
-                        Globals.Properties.board[x, i] = Globals.Properties.board[x, i - 2];
+                        board[x, i] = board[x, i - 2];
                         if (p[i - 2] == '.' || p[i - 2] == s[x - 1])
                         {
-                            Globals.Properties.board[x, i] = Globals.Properties.board[x, i] | Globals.Properties.board[x - 1, i];
+                            board[x, i] = board[x, i] | board[x - 1, i];
                         }
                     }
                 }
             }
 
-            return Globals.Properties.board;
+            return board;
         }
 
         public static void cleanrecursive(int columns, string pattern, bool[,] board, int x)
