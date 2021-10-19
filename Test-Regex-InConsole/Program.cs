@@ -738,11 +738,59 @@ namespace Test_Regex_InConsole
             }
         }
 
+        public bool recursive6match(string text, string pattern)
+        {
+            if (pattern.Count() == 0)
+            {
+                if (text.Count() == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
 
-   
+            bool equalityfirstcharacter;
+            if (!(text == "") && (pattern[0] == text[0] || pattern[0] == '.'))
+            {
+                equalityfirstcharacter = true;
+            }
+            else
+            {
+                equalityfirstcharacter = false;
+            }
+
+
+            if (pattern.Count() >= 2 && pattern[1] == '*')
+            {
+                if (recursive6match(text, pattern.Remove(0, 2)) || (equalityfirstcharacter && recursive6match(text.Remove(0, 1), pattern)))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if (equalityfirstcharacter && recursive6match(text.Remove(0, 1), pattern.Remove(0, 1)))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+
         static void Main(string[] args)
         {
-            bool something = IsMatch("aab", "c*a*b");
+            bool something = IsMatch2("aa", "a*");
             Console.WriteLine(something);
         }
     }
